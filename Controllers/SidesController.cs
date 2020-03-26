@@ -24,12 +24,16 @@ namespace burgershack.Controllers
             }
         }
 
-        [HttpGet("/sizes/{size}")]
-        public ActionResult<IEnumerable<Side>> GetBySize(Size size)
+        [HttpGet("sizes/{size}")]
+        public ActionResult<IEnumerable<Side>> GetBySize(string size)
         {
             try
             {
-                return Ok(FakeDB.sides.Where(s => s.Size == size));
+                if (Enum.TryParse<Size>(size, out Size filterSize))
+                {
+                    return Ok(FakeDB.sides.Where(s => s.Size == filterSize));
+                }
+                throw new Exception("Invalid size");
             }
             catch (Exception e)
             {
